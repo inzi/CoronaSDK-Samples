@@ -18,7 +18,7 @@ local function myRetinaTextField(x1,y1,w1,h1,foListener)
 
     -- Assume the best
 	local isRetina = false 
-    local iDivider=1 
+	local iDivider=1 
 	
 	-- Plan for the worst
     -- Note, but horizontal and vertical resolutions are in this table.
