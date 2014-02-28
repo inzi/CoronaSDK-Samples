@@ -80,6 +80,7 @@ function classFontForPixelSize:getFontSizebyPix( intPixelHeight )
             end
         end
         retval = oTxt.size -1
+        oTxt:removeSelf()
         oTxt = nil
         fontPixelSizeTable[ intPixelHeight ] = retval
     end

@@ -1,11 +1,8 @@
--- test
-
 local classFactory = require("classFontForPixelSize")
 local myFontSizeEngine =  classFactory.new( native.systemFont )
 
 
-print ("here")
-
+-- Change this rectangle height to see the font size change.
 local RectangleHeight = 100
 
 display.setDefault( "anchorX", 1 )
@@ -21,7 +18,5 @@ display.setDefault( "anchorX", 0 )
 
 local myText = display.newText( "Hello World!", display.contentCenterX, display.contentCenterY, native.systemFont, myFontSizeEngine:getFontSizebyPix( myRoundedRect.height *.8 ) )
 myText:setFillColor( 1, 0, 0 )
-
-
 
 
