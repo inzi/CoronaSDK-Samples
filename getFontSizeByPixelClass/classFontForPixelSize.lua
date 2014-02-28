@@ -39,8 +39,8 @@ myText:setFillColor( 1, 0, 0 )
 local classFontForPixelSize = {}
 local classTemplate_mt = { __index = classFontForPixelSize }	-- metatable
 
-local fontPixelSizeTable = {}
-local stringText = "q▄█▀A"
+
+
 
 -------------------------------------------------
 -- PRIVATE FUNCTIONS
@@ -53,9 +53,10 @@ function classFontForPixelSize.new( oFont )	-- constructor
 
     local newClassTemplate = {
         font = oFont,
-        testString = stringText
+        testString = "q▄█▀A",
+        fontPixelSizeTable = {}
     }
-
+    
     return setmetatable( newClassTemplate, classTemplate_mt )
 
 
@@ -66,23 +67,23 @@ end
 function classFontForPixelSize:getFontSizebyPix( intPixelHeight )
     local retval = 0
 
-    if fontPixelSizeTable[ intPixelHeight ]~=nil then
+    if self.fontPixelSizeTable[ intPixelHeight ]~=nil then
 
-        retval = fontPixelSizeTable[intPixelHeight]
+        retval = self.fontPixelSizeTable[intPixelHeight]
 
     else
         local oTxt = display.newText( self.testString , 0, display.contentHeight*2, self.font, 1)
         while oTxt.height < intPixelHeight do
 
             oTxt.size = oTxt.size + 1
-            if  fontPixelSizeTable[ oTxt.height ]==nil then
-                fontPixelSizeTable[ oTxt.height ] = oTxt.size
+            if self.fontPixelSizeTable[ oTxt.height ]==nil then
+                self.fontPixelSizeTable[ oTxt.height ] = oTxt.size
             end
         end
         retval = oTxt.size -1
         oTxt:removeSelf()
         oTxt = nil
-        fontPixelSizeTable[ intPixelHeight ] = retval
+        self.fontPixelSizeTable[ intPixelHeight ] = retval
     end
     return retval
 end
