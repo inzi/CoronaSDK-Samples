@@ -1,6 +1,6 @@
 -------------------------------------------------
 --
--- enableRGBTrans
+-- enableRGBTrans.lua
 --
 --
 --[[
@@ -221,23 +221,25 @@ local function fromColorTableDemo(obj)
         local delay, timesToShow=2000, 5
         local function showRandomSaveValue(id)
             local thisid = 0
-            for k,v in pairs(obj._colorValueTable ) do
-                thisid = thisid+1
-                if thisid == id then
-                    obj.text = "ColorTableDemo: \"".. k .. "\" " .. timesToShow
-                    obj:setColorFromValue(k)
-                    break
-                end
-
-            end
             timesToShow = timesToShow-1
-            if timesToShow==0 then
+            if timesToShow<0 then
                 pulse(obj)
-            end
+            else
 
+
+                for k,v in pairs(obj._colorValueTable ) do
+                    thisid = thisid+1
+                    if thisid == id then
+                        obj.text = "ColorTableDemo: \"".. k .. "\" " .. timesToShow+1
+                        obj:setColorFromValue(k)
+                        break
+                    end
+
+                end
+            end
         end
 
-        timer.performWithDelay(delay, function() showRandomSaveValue( math.random(numberSaveValues) ) end, timesToShow)
+        timer.performWithDelay(delay, function() showRandomSaveValue( math.random(numberSaveValues) ) end, timesToShow+1)
     else
         pulse(obj)
     end
