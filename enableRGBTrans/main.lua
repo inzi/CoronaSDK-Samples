@@ -252,7 +252,7 @@ text3:defineColorValue( "myBlue", {.2, .2, 1})
 text3:setColorFromValue("myBlue")
 text3.text = "This is \"myBlue\"."
 
-------------------------------------------------- AN EXAMPLE COLOR TABLE (FROM USER Arrpirate in IRC channel)
+------------------------------------------------- AN EXAMPLE COLOR TABLE 
 local myColorTable = {
     black       = {   0,    0,    0},
     white       = {   1,    1,    1},
