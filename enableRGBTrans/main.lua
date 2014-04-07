@@ -137,6 +137,11 @@ function enableRGBTrans(_t)
         end
 
     end
+	    function t:setFillColor(...)
+		self.r, self.g, self.b, self.a=arg[1],arg[2],arg[3],arg[4]
+        _t:setFilleColor(self.r, self.g, self.b, self.a)
+
+    end
     function t:numberSaveValues()
         local retval = 0
         for _,_ in pairs(self._colorValueTable)do
