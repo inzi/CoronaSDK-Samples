@@ -1,31 +1,3 @@
--------------------------------------------------
---
--- classTimerTag.lua
---
--- Extends the timer object to use tags
---
--- adds a fourth, optional tag parameter to creating timers.
---
---
--- How to use
--- timer =  require ("classTimerTag")
---
---
--- local mytimer = timer.performWithDelay(5000 , function(event) print ("fired " .. event.tag .." - " .. system.getTimer()) end, 1, "timerTag")
--- local mytimer = timer.performWithDelay(5000 , function(event) print ("fired " .. event.tag .." - " .. system.getTimer()) end, "timerTag")
--- local mytimer = timer.performWithDelay(5000 , function(event) print ("fired " .. event.tag .." - " .. system.getTimer()) end, 1)
--- local mytimer = timer.performWithDelay(5000 , function(event) print ("fired " .. event.tag .." - " .. system.getTimer()) end)
-
--- timer.cancel(mytimer)
--- timer.cancel("default")
-
--- timer.pause("timerTag")
--- timer.resume("timerTag")
--- timer.cancel("timerTag")
-
-
--------------------------------------------------
-
 
 
 local t = {}
@@ -85,7 +57,8 @@ t.cancel = function(...)
             if v._tag == arg[1] then
 
                 _t._funcs.cancel( v )
-
+            elseif arg[1]=="*" then
+                _t._funcs.cancel( v )
             end
 
         end
@@ -103,7 +76,8 @@ t.resume = function(...)
             if v._tag == arg[1] then
 
                 _t._funcs.resume( v )
-
+            elseif arg[1]=="*" then
+                _t._funcs.resume( v )
             end
 
 
@@ -123,6 +97,8 @@ t.pause = function(...)
 
             if v._tag == arg[1] then
                 --                spit ("found " .. v._tag)
+                _t._funcs.pause( v )
+            elseif arg[1]=="*" then
                 _t._funcs.pause( v )
             end
 
