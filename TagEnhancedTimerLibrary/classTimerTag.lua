@@ -5,7 +5,6 @@
 -- Extends the timer object to use tags
 --
 -- adds a fourth, optional tag parameter to creating timers.
--- when using, you are required to pass iterations
 --
 --
 -- How to use
@@ -13,6 +12,17 @@
 --
 --
 -- local mytimer = timer.performWithDelay(5000 , function(event) print ("fired " .. event.tag .." - " .. system.getTimer()) end, 1, "timerTag")
+-- local mytimer = timer.performWithDelay(5000 , function(event) print ("fired " .. event.tag .." - " .. system.getTimer()) end, "timerTag")
+-- local mytimer = timer.performWithDelay(5000 , function(event) print ("fired " .. event.tag .." - " .. system.getTimer()) end, 1)
+-- local mytimer = timer.performWithDelay(5000 , function(event) print ("fired " .. event.tag .." - " .. system.getTimer()) end)
+
+-- timer.cancel(mytimer)
+-- timer.cancel("default")
+
+-- timer.pause("timerTag")
+-- timer.resume("timerTag")
+-- timer.cancel("timerTag")
+
 
 -------------------------------------------------
 
