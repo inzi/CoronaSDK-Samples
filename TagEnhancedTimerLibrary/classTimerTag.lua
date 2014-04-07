@@ -27,105 +27,123 @@
 -------------------------------------------------
 
 
-local function _SpawnEnhancedTimer( timerObj )-- constructor
 
-    local retVal = {}
+local t = {}
 
-    local _t = {
+-- keep a private access to original table
+local _t = t
 
-        performWithDelay = timerObj.performWithDelay,
-        cancel = timerObj.cancel,
-        pause = timerObj.pause,
-        resume = timerObj.resume,
+-- create proxy
+t = timer
+t._timers = {}
+_t._funcs = {
 
-    }
-
-    retVal = setmetatable( timerObj ,  {})
-
-    retVal.performWithDelay = function(...)
-
-        local returnObject
-
-        local tag = arg[4]
-        local iterations = nil
-        if tag == nil then tag = "default" end
-        if arg[3] ~= nil then
-            if type( arg[3] ) == "string" then
-                tag = arg[3]
-            else
-                iterations = arg[3]
-            end
-        end
-
-        -- Set a default tag; handy for cleaning up scenes. If you don't use
-        -- tags, then you call timer.cancel("default") and it will cancel ALL running timers
+    performWithDelay = t.performWithDelay,
+    cancel = t.cancel,
+    resume = t.resume,
+    pause = t.pause,
+    _insert = t._insert,
+    enterFrame = t.enterFrame
+}
 
 
-        returnObject =  _t["performWithDelay"](arg[1], function(e) e.tag=tag; arg[2](e) end, iterations)
+t.performWithDelay = function(...)
 
-        returnObject._tag = tag
 
-        return returnObject
+    local returnObject
 
-    end
-
-    retVal.cancel = function(...)
-
-        if type( arg[1] ) == "string" then
-
-            for _,v in pairs(timer._runlist) do
-
-                if v._tag == arg[1] then
-
-                    _t["cancel"]( v )
-
-                end
-
-            end
+    local tag = arg[4]
+    local iterations = nil
+    if tag == nil then tag = "default" end
+    if arg[3] ~= nil then
+        if type( arg[3] ) == "string" then
+            tag = arg[3]
         else
-            _t["cancel"]( arg[1] )
-        end
-    end
-    retVal.resume = function(...)
-
-        if type( arg[1] ) == "string" then
-
-            for _,v in pairs(timer._runlist) do
-
-                if v._tag == arg[1] then
-
-                    _t["resume"]( v )
-
-                end
-
-
-            end
-        else
-
-            _t["resume"]( arg[1] )
-
-        end
-    end
-    retVal.pause = function(...)
-
-        if type( arg[1] ) == "string" then
-
-            for _,v in pairs(timer._runlist) do
-
-                if v._tag == arg[1] then
-                    _t["pause"]( v )
-                end
-
-
-            end
-        else
-            _t["pause"]( arg[1] )
+            iterations = arg[3]
         end
     end
 
-    return retVal
+    -- Set a default tag; handy for cleaning up scenes. If you don't use
+    -- tags, then you call timer.cancel("default") and it will cancel ALL running timers
 
+    returnObject = _t._funcs.performWithDelay(arg[1], arg[2], iterations)
+
+    returnObject._tag = tag
+
+    table.insert( t._timers, returnObject )
+
+    return returnObject
 end
 
+t.cancel = function(...)
 
-return _SpawnEnhancedTimer( timer )
+    if type( arg[1] ) == "string" then
+
+        --        for _,v in pairs(timer._runlist) do
+        for _,v in pairs(  t._timers ) do
+
+            if v._tag == arg[1] then
+
+                _t._funcs.cancel( v )
+
+            end
+
+        end
+    else
+        _t._funcs.cancel( arg[1] )
+    end
+end
+t.resume = function(...)
+
+    if type( arg[1] ) == "string" then
+
+        --        for _,v in pairs(timer._runlist) do
+        for _,v in pairs(  t._timers ) do
+
+            if v._tag == arg[1] then
+
+                _t._funcs.resume( v )
+
+            end
+
+
+        end
+    else
+
+        _t._funcs.resume( arg[1] )
+
+    end
+end
+t.pause = function(...)
+
+    if type( arg[1] ) == "string" then
+
+        --        for _,v in pairs(timer._runlist) do
+        for _,v in pairs(  t._timers ) do
+
+            if v._tag == arg[1] then
+                --                spit ("found " .. v._tag)
+                _t._funcs.pause( v )
+            end
+
+
+        end
+    else
+        _t._funcs.pause( arg[1] )
+    end
+end
+
+-- create metatable
+local mt = {
+    __index = function (t,k)
+        return _t[k]   -- access the original table
+    end,
+
+    __newindex = function (t,k,v)
+        _t[k] = v   -- update original table
+    end
+
+}
+t = setmetatable(t, mt)
+
+return t
